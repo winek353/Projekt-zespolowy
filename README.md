@@ -1,0 +1,2 @@
+# Projekt-zespolowy
+aplikacja społecznościowa
