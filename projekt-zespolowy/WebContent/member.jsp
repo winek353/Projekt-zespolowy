@@ -7,5 +7,15 @@
 </head>
 <body>
 welcome you are logged in
+<p>
+
+<a href = "http://localhost:8080/projekt-zespolowy/profile">wyswietl profil</a>
+</p>
+<p>
+	<form method="post" , action="Logout">
+		<td><input type="submit" , value="logout"></td>
+	</form>
+</p>
+
 </body>
 </html>

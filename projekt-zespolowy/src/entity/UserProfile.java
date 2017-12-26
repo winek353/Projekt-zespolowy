@@ -173,7 +173,6 @@ public class UserProfile {
 		if(profile.isEmpty())//do przerobienia
 			return null;
 		else {
-			System.out.println(profile.get(0).toString());
 			return profile.get(0);
 		}
 			

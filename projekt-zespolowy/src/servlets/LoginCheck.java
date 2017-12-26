@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -49,12 +50,14 @@ public class LoginCheck extends HttpServlet {
 		String uname = request.getParameter("uname");
 		String password = request.getParameter("password");
 		
-		System.out.print(uname);
+		//System.out.print(uname);
 		UserProfile userProfile = UserProfile.getUserProfileFromDatabase(uname);
 		
 		if(userProfile != null && PasswordHasher.validatePassword(password, userProfile.getPassword()) ) {
-			response.sendRedirect("member.jsp");
 			//utworzenie sesji 
+			HttpSession session=request.getSession();
+			session.setAttribute("userName", uname); 
+			response.sendRedirect("member.jsp");
 		}
 		else 
 			response.sendRedirect("error.jsp");
