@@ -2,19 +2,25 @@ package entity;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
 
 import logic.PasswordHasher;
 
@@ -24,7 +30,7 @@ public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name="user_profile_id")
 	private int id;
 	
 	@Column(name="user_name")
@@ -34,14 +40,24 @@ public class UserProfile {
 	private String email;
 	
 	@Column(name="password")
-	private String password; //iterations:salt:hash
-
+	private String password; //salt:hash
 	
-	public UserProfile() {
+	//znajomi
+	@ManyToMany(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
+	@JoinTable(name="user_colleague",
+		joinColumns={@JoinColumn(name="user_id")},
+		inverseJoinColumns={@JoinColumn(name="colleague_id")})
+	private Set<UserProfile> colleagues = new HashSet<UserProfile>();
+
+//	@ManyToMany(mappedBy="colleagues")
+//	private Set<UserProfile> teammates = new HashSet<UserProfile>();
+	
+	public UserProfile()  {		
 		
 	}
+
 	
-	public UserProfile(String userName, String email, String password)  {
+	public UserProfile(String userName, String email, String password)  {		
 		this.userName = userName;
 		this.email = email;
 		try {
@@ -51,6 +67,14 @@ public class UserProfile {
 		} catch (InvalidKeySpecException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Set<UserProfile> getColleagues() {
+		return colleagues;
+	}
+
+	public void setColleagues(Set<UserProfile> colleagues) {
+		this.colleagues = colleagues;
 	}
 
 	public int getId() {
@@ -98,9 +122,6 @@ public class UserProfile {
 
 		Session session = factory.getCurrentSession();
 		try {			
-			
-			System.out.println(toString());
-
 			session.beginTransaction();
 			
 			session.save(this);
@@ -153,6 +174,30 @@ public class UserProfile {
 		return result;
 	}
 	
+	public void addFriend (UserProfile friendProfile) {//??????????????????
+		SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(UserProfile.class)
+				.buildSessionFactory();
+
+		Session session = factory.getCurrentSession();	
+		try {			
+			session.beginTransaction();
+
+			UserProfile me = session.get(UserProfile.class, this.getId());
+			UserProfile friend = session.get(UserProfile.class, friendProfile.getId());
+
+			me.getColleagues().add(friend);
+
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		finally {
+			factory.close();
+		}
+	}
+	
 	public static UserProfile getUserProfileFromDatabase (String userName) {
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
@@ -169,13 +214,10 @@ public class UserProfile {
 		}finally {
 			factory.close();
 		}
-		System.out.println();
 		if(profile.isEmpty())//do przerobienia
 			return null;
 		else {
 			return profile.get(0);
 		}
-			
 	}
-	
 }

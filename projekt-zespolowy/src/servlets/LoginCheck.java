@@ -46,7 +46,6 @@ public class LoginCheck extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//cos
 		String uname = request.getParameter("uname");
 		String password = request.getParameter("password");
 		

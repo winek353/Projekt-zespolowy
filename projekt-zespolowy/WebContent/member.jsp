@@ -8,8 +8,10 @@
 <body>
 welcome you are logged in
 <p>
-
-<a href = "http://localhost:8080/projekt-zespolowy/profile">wyswietl profil</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/profile">wyswietl profil</a>
+</p>
+<p>
+	<a href = "http://localhost:8080/projekt-zespolowy/addFriend.jsp">dodaj znajomego</a>
 </p>
 <p>
 	<form method="post" , action="Logout">
