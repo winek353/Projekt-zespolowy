@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,31 +37,13 @@ public class Profile extends HttpServlet {
 		 PrintWriter out=response.getWriter();
 		 
 	     if(session!=null && session.getAttribute("userName") != null){ 
-	        String usetName=(String)session.getAttribute("userName");  
-	        UserProfile userProfile = UserProfile.getUserProfileFromDatabase(usetName);
-	        
-	        String docType =
-	                "<!doctype html public \"-//w3c//dtd html 4.0 " +
-	                "transitional//en\">\n";
-
-	             out.println(docType +
-	                "<html>\n" +
-	                   "<head><title>" + "title" + "</title></head>\n" +
-	                   "<body>" +
-	                    	"<table border = \\1\\>" +
-	                    	 "<tr>" +
-                       			"<th>" + "user name:" + "</th>" + "<th>" +  userProfile.getUserName() +"</th>" +
-                       		 "</tr>" +
-                       			
-                       		"<tr>" +
-                   				"<th>" + "email:" + "</th>" + "<th>" +  userProfile.getEmail() +"</th>" +
-                   			"</tr>" + 
-	                    	"</table>" +
-	                   "</body>" +
-	               "</html>"
-	             );
-	        
-	        //out.print("Hello, "+name+" Welcome to Profile");  
+	    	 String userName=(String)session.getAttribute("userName");  
+		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
+		     
+		     request.setAttribute("friends", userProfile.getColleagues());
+		     request.setAttribute("userName", userProfile.getUserName());
+		     request.setAttribute("userEmail", userProfile.getEmail());
+		     request.getRequestDispatcher("/profile.jsp").forward(request, response);
 	     }  
 	     else{  
 	         out.print("Please login first");  
@@ -68,10 +51,7 @@ public class Profile extends HttpServlet {
 	         //wyswietlanie bledu dopiero na stronie logowania
 	     }
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);

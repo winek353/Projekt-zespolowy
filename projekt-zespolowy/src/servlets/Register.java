@@ -19,16 +19,16 @@ import logic.PasswordHasher;
 
 
 /**
- * Servlet implementation class RegisterCheck
+ * Servlet implementation class Registe
  */
-@WebServlet("/RegisterCheck")
-public class RegisterCheck extends HttpServlet {
+@WebServlet("/Register")
+public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterCheck() {
+    public Register() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -51,26 +51,24 @@ public class RegisterCheck extends HttpServlet {
 		String password = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
 		
-		if(password.length()>=6){//trzeba coœ z tym zrobiæ :)
-			if(password.equals(confirmedPassword)) {
-				if(!UserProfile.isUserNameInDatabase(uname)) {
-					if(!UserProfile.isEmailInDatabase(email)) {
-						
-						UserProfile userProfile = new UserProfile(uname, email, password);
-						userProfile.saveToDatabase();
-						
-						response.getWriter().append("<html><b>konto zostalo utworzone</b>").append(" </html>");
-					}
-					else
-						response.getWriter().append("<html><b>podany email jest zajety</b>").append(" </html>");
-				}
-				else 
-					response.getWriter().append("<html><b>nazwa u¿ytkownika jest zajeta</b>").append(" </html>");
-			}
-			else
-				response.getWriter().append("<html><b>podane hasla sa rozne od siebie</b>").append(" </html>");
-		}
-		else
+		if(password.length()<6) {
 			response.getWriter().append("<html><b>haslo musi miec co najmniej 6 znakow</b>").append(" </html>");
+			return;
+		}	
+		if(!password.equals(confirmedPassword)) {
+			response.getWriter().append("<html><b>podane hasla sa rozne od siebie</b>").append(" </html>");
+			return;
+		}			
+		if(UserProfile.isUserNameInDatabase(uname)) {
+			response.getWriter().append("<html><b>nazwa u¿ytkownika jest zajeta</b>").append(" </html>");
+			return;
+		}			
+		if(UserProfile.isEmailInDatabase(email)) {
+			response.getWriter().append("<html><b>podany email jest zajety</b>").append(" </html>");
+			return;
+		}
+		UserProfile userProfile = new UserProfile(uname, email, password);
+		userProfile.saveToDatabase();
+		response.getWriter().append("<html><b>konto zostalo utworzone</b>").append(" </html>");
 	}
 }

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form method="post" , action="RegisterCheck">
+	<form method="post" , action="Register">
 		<table>
 			<tr>
 				<td>User Name</td>
@@ -31,6 +31,5 @@
 			</tr>
 		</table>
 	</form>
-	<!-- <a href = "http://localhost:8080/projekt-zespolowy/member.jsp?param=para"> link</a> -->
 </body>
 </html>

@@ -55,8 +55,7 @@ public class AddFriend extends HttpServlet {
 		        UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
 		        
 		        userProfile.addFriend(friendProfile);
-		        
-		        System.out.println("jednak jestem");
+
 		        String docType =
 		                "<!doctype html public \"-//w3c//dtd html 4.0 " +
 		                "transitional//en\">\n";

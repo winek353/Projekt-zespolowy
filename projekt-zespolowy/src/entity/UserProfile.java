@@ -111,7 +111,7 @@ public class UserProfile {
 	
 	@Override
 	public String toString() {
-		return "UserProfile [id=" + id + ", userName=" + userName + ", email=" + email + ", password=" + password + "]";
+		return "UserProfile [id=" + id + ", userName=" + userName + ", email=" + email + "]";
 	}
 	
 	public void saveToDatabase () {
