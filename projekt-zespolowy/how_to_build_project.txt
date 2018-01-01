@@ -1,0 +1,12 @@
+Eclipse:
+
+hibernate:
+	https://www.youtube.com/playlist?list=PLEAQNNR8IlB7fNkRsUgzrR346i-UqE5CG
+tomcat:
+	https://www.youtube.com/watch?v=kLgquZ2FiuQ
+also:
+	paste into VM arguments:
+	--add-modules java.xml.bind
+
+	copy into WebContent\WEB-INF\lib
+	jstl-1.2.jar  file 

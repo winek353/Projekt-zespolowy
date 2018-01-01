@@ -22,8 +22,32 @@ CREATE TABLE `user_colleague` (
 	CONSTRAINT `FK_COL` FOREIGN KEY (`colleague_id`) REFERENCES `user_profile` (`user_profile_id`)
 );
 
+CREATE TABLE `message` (
+  `message_id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+  `message` TEXT DEFAULT NULL,
+  `author` varchar(50) NOT NULL,
+  -- date
+  PRIMARY KEY (`message_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_profile_message` (
+  `user_profile_id` BIGINT(11) NOT NULL,
+  `message_id` BIGINT(11) NOT NULL,
+  PRIMARY KEY (`user_profile_id`,`message_id`),
+  KEY `message_id` (`message_id`),
+  
+  
+  CONSTRAINT `user_profile_message_fk_1` 
+   FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`user_profile_id`),
+   
+  CONSTRAINT `user_profile_message_fk_2` 
+   FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*USUWANIE BAZY DANYCH
 
+DROP TABLE user_profile_message;
+DROP TABLE message;
 DROP TABLE user_colleague;
 DROP TABLE user_profile;
 */

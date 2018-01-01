@@ -14,6 +14,12 @@ welcome you are logged in
 	<a href = "http://localhost:8080/projekt-zespolowy/addFriend.jsp">dodaj znajomego</a>
 </p>
 <p>
+	<a href = "http://localhost:8080/projekt-zespolowy/create_message.jsp">create message</a>
+</p>
+<p>
+	<a href = "http://localhost:8080/projekt-zespolowy/DisplayMessages">show inbox</a>
+</p>
+<p>
 	<form method="post" , action="Logout">
 		<td><input type="submit" , value="logout"></td>
 	</form>

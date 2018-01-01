@@ -48,6 +48,14 @@ public class UserProfile {
 		joinColumns={@JoinColumn(name="user_id")},
 		inverseJoinColumns={@JoinColumn(name="colleague_id")})
 	private Set<UserProfile> colleagues = new HashSet<UserProfile>();
+	
+	//wiadomosci
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @JoinTable(name = "user_profile_message", 
+        joinColumns = { @JoinColumn(name = "user_profile_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "message_id") }
+    )
+    private Set<Message> messages = new HashSet<Message>();
 
 //	@ManyToMany(mappedBy="colleagues")
 //	private Set<UserProfile> teammates = new HashSet<UserProfile>();
@@ -56,7 +64,6 @@ public class UserProfile {
 		
 	}
 
-	
 	public UserProfile(String userName, String email, String password)  {		
 		this.userName = userName;
 		this.email = email;
@@ -71,6 +78,14 @@ public class UserProfile {
 
 	public Set<UserProfile> getColleagues() {
 		return colleagues;
+	}
+
+	public Set<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Set<Message> messages) {
+		this.messages = messages;
 	}
 
 	public void setColleagues(Set<UserProfile> colleagues) {
@@ -219,5 +234,23 @@ public class UserProfile {
 		else {
 			return profile.get(0);
 		}
+	}
+	public static UserProfile getUserProfileFromDatabase (int id) {
+		SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(UserProfile.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		UserProfile profile = null;
+		try {			
+		session.beginTransaction();
+
+		profile = session.get(UserProfile.class, id);
+		session.getTransaction().commit();
+		}finally {
+			factory.close();
+			
+		}
+		return profile;
 	}
 }
