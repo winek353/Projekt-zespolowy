@@ -12,19 +12,18 @@ import javax.servlet.http.HttpSession;
 
 import entity.ColleagueRequest;
 import entity.UserProfile;
-import logic.PasswordHasher;
 
 /**
- * Servlet implementation class AddFriend
+ * Servlet implementation class SendFriendRequest
  */
-@WebServlet("/AddFriend")
-public class AddFriend extends HttpServlet {
+@WebServlet("/SendFriendRequest")
+public class SendFriendRequest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddFriend() {
+    public SendFriendRequest() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,23 +40,31 @@ public class AddFriend extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
 		HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
 	     if(session!=null && session.getAttribute("userName") != null){
-	    	 int friendId = Integer.parseInt(request.getParameter("friend_id"));
+	    	 String friendName = request.getParameter("friendName");	
 	    	 
-	    	 System.out.println(friendId);
-	    	 UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
-	    	 
-	    	 String userName=(String)session.getAttribute("userName");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
-		     
-		     userProfile.addFriend(friendProfile);
-		     friendProfile.addFriend(userProfile);
-		     
-		     out.print("you are friend with " + friendProfile.getUserName()); 
+	    	if(friendName.equals(session.getAttribute("userName"))) {
+	    		out.print("you can not add yourself as a friend (forever alone)");
+	    		return;
+	    	}  		
+	    		
+	 		if( UserProfile.isUserNameInDatabase (friendName)) { //and it is not friend already or yourself!!!!!!!!!!!!!!
+	 			UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendName);
+	 			
+				
+		        String userName=(String)session.getAttribute("userName");  
+		        UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
+		        
+		        ColleagueRequest.sendCollegueRequest (userProfile.getId(), friendProfile.getId());
+		        
+		        out.print("Friend request sent to " + friendProfile.getUserName()); 
+	 		}
+	 		else {
+	 			out.print("your friend doesn't exist :D");  
+	 		}
 			
 	     }  
 	     else{  

@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form method="post" , action="AddFriend">
+	<form method="post" , action="SendFriendRequest">
 		<table>
 			<tr>
 				<td>User Name</td>

@@ -43,7 +43,7 @@ public class DisplayMessages extends HttpServlet {
 		     
 		    // Set<Message> messages= userProfile.getMessages();
 		     System.out.println( userName);
-		     System.out.println( userProfile.getMessages());
+		     System.out.println( userProfile.getMessages().toArray()[0]);
 		     request.setAttribute("messages", userProfile.getMessages());
 		     request.getRequestDispatcher("/messages.jsp").forward(request, response);
 	     }  

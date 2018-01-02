@@ -11,7 +11,7 @@ welcome you are logged in
 	<a href = "http://localhost:8080/projekt-zespolowy/profile">wyswietl profil</a>
 </p>
 <p>
-	<a href = "http://localhost:8080/projekt-zespolowy/addFriend.jsp">dodaj znajomego</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/DisplayFriendRequests">znajomi</a>
 </p>
 <p>
 	<a href = "http://localhost:8080/projekt-zespolowy/create_message.jsp">create message</a>

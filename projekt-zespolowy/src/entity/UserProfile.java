@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.CascadeType;
 
@@ -41,6 +42,11 @@ public class UserProfile {
 	
 	@Column(name="password")
 	private String password; //salt:hash
+	
+	//collegue request
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="recipient")
+    private Set<ColleagueRequest> colleagueRequests;
+	
 	
 	//znajomi
 	@ManyToMany(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
@@ -74,6 +80,14 @@ public class UserProfile {
 		} catch (InvalidKeySpecException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Set<ColleagueRequest> getColleagueRequests() {
+		return colleagueRequests;
+	}
+
+	public void setColleagueRequests(Set<ColleagueRequest> colleagueRequests) {
+		this.colleagueRequests = colleagueRequests;
 	}
 
 	public Set<UserProfile> getColleagues() {
@@ -202,7 +216,8 @@ public class UserProfile {
 			UserProfile me = session.get(UserProfile.class, this.getId());
 			UserProfile friend = session.get(UserProfile.class, friendProfile.getId());
 
-			me.getColleagues().add(friend);
+			 me.getColleagues().add(friend);
+			 //friend.getColleagues().add(me);
 
 			session.getTransaction().commit();
 		} catch (Exception e) {

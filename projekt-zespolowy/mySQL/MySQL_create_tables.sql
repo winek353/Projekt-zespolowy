@@ -22,6 +22,16 @@ CREATE TABLE `user_colleague` (
 	CONSTRAINT `FK_COL` FOREIGN KEY (`colleague_id`) REFERENCES `user_profile` (`user_profile_id`)
 );
 
+CREATE TABLE `colleague_request` (
+	`colleague_request_id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+	`user_id` BIGINT(11) NOT NULL,
+    `requester_id`BIGINT(11) NOT NULL,
+    
+	PRIMARY KEY (`colleague_request_id`),
+	KEY `user_id` (`user_id`),
+	CONSTRAINT `FK_USER` FOREIGN KEY (`user_id`) REFERENCES `user_profile` (`user_profile_id`)
+);
+
 CREATE TABLE `message` (
   `message_id` BIGINT(11) NOT NULL AUTO_INCREMENT,
   `message` TEXT DEFAULT NULL,
@@ -46,6 +56,7 @@ CREATE TABLE `user_profile_message` (
 
 /*USUWANIE BAZY DANYCH
 
+DROP TABLE colleague_request;
 DROP TABLE user_profile_message;
 DROP TABLE message;
 DROP TABLE user_colleague;

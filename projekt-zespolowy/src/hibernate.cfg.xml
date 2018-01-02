@@ -25,6 +25,7 @@
 		<property name="current_session_context_class">thread</property>
 		
 		<mapping class="entity.Message" />
+		<mapping class="entity.ColleagueRequest" />
  
     </session-factory>
 
