@@ -20,13 +20,13 @@ import logic.PasswordHasher;
  * Servlet implementation class LoginCheck
  */
 @WebServlet("/LoginCheck")
-public class LoginCheck extends HttpServlet {
+public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginCheck() {
+    public Login() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -55,7 +55,7 @@ public class LoginCheck extends HttpServlet {
 		if(userProfile != null && PasswordHasher.validatePassword(password, userProfile.getPassword()) ) {
 			//utworzenie sesji 
 			HttpSession session=request.getSession();
-			session.setAttribute("userName", uname); 
+			session.setAttribute("userId", userProfile.getId()); 
 			response.sendRedirect("member.jsp");
 		}
 		else 

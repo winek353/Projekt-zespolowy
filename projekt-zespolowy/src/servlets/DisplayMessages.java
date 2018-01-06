@@ -36,21 +36,15 @@ public class DisplayMessages extends HttpServlet {
 		 HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
-	     if(session!=null && session.getAttribute("userName") != null){ 
-	    	 String userName=(String)session.getAttribute("userName");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
-		     
-		     
-		    // Set<Message> messages= userProfile.getMessages();
-		     System.out.println( userName);
-		     System.out.println( userProfile.getMessages().toArray()[0]);
+	     if(session!=null && session.getAttribute("userId") != null){ 
+	    	 int userId= (int) session.getAttribute("userId");  
+		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+
 		     request.setAttribute("messages", userProfile.getMessages());
 		     request.getRequestDispatcher("/messages.jsp").forward(request, response);
 	     }  
 	     else{  
 	         out.print("Please login first");  
-	         //request.getRequestDispatcher("login.html").include(request, response);  
-	         //wyswietlanie bledu dopiero na stronie logowania
 	     }
 	}
 

@@ -8,10 +8,10 @@
 <body>
 welcome you are logged in
 <p>
-	<a href = "http://localhost:8080/projekt-zespolowy/profile">wyswietl profil</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/profile">display profile</a>
 </p>
 <p>
-	<a href = "http://localhost:8080/projekt-zespolowy/DisplayFriendRequests">znajomi</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/DisplayFriendRequests">friends</a>
 </p>
 <p>
 	<a href = "http://localhost:8080/projekt-zespolowy/create_message.jsp">create message</a>

@@ -42,7 +42,7 @@ public class Logout extends HttpServlet {
 		 PrintWriter out=response.getWriter();
 		 
 		 if(session!=null){  
-		        String name=(String)session.getAttribute("userName");  
+		       // String name=(String)session.getAttribute("userName");  
 		        
 		        //end session
 		        session.invalidate(); 

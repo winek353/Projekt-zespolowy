@@ -8,16 +8,16 @@
 </head>
 <body>
 <p>
-	<a href = "http://localhost:8080/projekt-zespolowy/addFriend.jsp">add friend</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/send_friend_request.jsp">add friend</a>
 </p>
 <p>
 	friend requests:
 	<table  width='350', border = \1\>
-  			<c:forEach items="${colleagueRequests}" var="colleagueRequest">
+  			<c:forEach items="${friendRequests}" var="friendRequest">
   			<form method="post" action="AddFriend">  
   				 <tr>
-  			 		 <td>from ${colleagueRequest.getRequesterName()}</td>
-  			 		 <input type="hidden" name="friend_id" value="${colleagueRequest.getRequesterId()}">
+  			 		 <td>from ${friendRequest.getRequesterName()}</td>
+  			 		 <input type="hidden" name="request_id" value="${friendRequest.getId()}">
   			 		 <td><input type="submit" , value="accept"></td>
   				 </tr>
   			 </form>

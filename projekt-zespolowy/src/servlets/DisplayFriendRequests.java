@@ -34,11 +34,11 @@ public class DisplayFriendRequests extends HttpServlet {
 		HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
-	     if(session!=null && session.getAttribute("userName") != null){ 
-	    	 String userName=(String)session.getAttribute("userName");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
+	     if(session!=null && session.getAttribute("userId") != null){ 
+	    	 int userId= (int) session.getAttribute("userId");   
+		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 
-		     request.setAttribute("colleagueRequests", userProfile.getColleagueRequests());
+		     request.setAttribute("friendRequests", userProfile.getFriendRequests());
 		     request.getRequestDispatcher("/friends.jsp").forward(request, response);
 	     }  
 	     else{  

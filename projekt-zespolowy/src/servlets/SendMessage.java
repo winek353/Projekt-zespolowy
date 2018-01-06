@@ -44,13 +44,13 @@ public class SendMessage extends HttpServlet {
 		HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
-	     if(session!=null && session.getAttribute("userName") != null){ 
+	     if(session!=null && session.getAttribute("userId") != null){ 
 	    	 String text = request.getParameter("message");
 	 		 String recipient = request.getParameter("recipient");
 	 		 System.out.println("Do = " + recipient+ " " + "text = " + text);
 	 		 
-	 		String userName=(String)session.getAttribute("userName");
-	 		UserProfile sender = UserProfile.getUserProfileFromDatabase(userName);
+	 		int userId= (int) session.getAttribute("userId");  
+	 		UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
 	    	UserProfile recipent = UserProfile.getUserProfileFromDatabase(recipient);
 	    	 
 	 		 

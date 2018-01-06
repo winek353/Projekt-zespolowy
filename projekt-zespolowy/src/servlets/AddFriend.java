@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import entity.ColleagueRequest;
+import entity.FriendRequest;
 import entity.UserProfile;
 import logic.PasswordHasher;
 
@@ -41,24 +41,28 @@ public class AddFriend extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		HttpSession session=request.getSession(false);
+		 HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
-	     if(session!=null && session.getAttribute("userName") != null){
-	    	 int friendId = Integer.parseInt(request.getParameter("friend_id"));
+	     if(session!=null && session.getAttribute("userId") != null){
+	    	 int friendRequestId = Integer.parseInt(request.getParameter("request_id"));
+
+	    	 FriendRequest friendRequest = FriendRequest
+	    			 .getFriendRequestFromDatabase(friendRequestId);
 	    	 
-	    	 System.out.println(friendId);
+	    	 int friendId = friendRequest.getRequesterId();
+	    	
 	    	 UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
 	    	 
-	    	 String userName=(String)session.getAttribute("userName");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
+	    	 int userId= (int) session.getAttribute("userId");   
+		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 		     
 		     userProfile.addFriend(friendProfile);
 		     friendProfile.addFriend(userProfile);
 		     
-		     out.print("you are friend with " + friendProfile.getUserName()); 
-			
+		     friendRequest.deleteFriendRequestFromDatabase ();
+		     
+		     out.print("you are friend with " + friendProfile.getUserName()); 	
 	     }  
 	     else{  
 	         out.print("Please login first");  

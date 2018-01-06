@@ -81,7 +81,6 @@ public class Message {
 		try {			
 			session.beginTransaction();
 
-			//UserProfile sender = session.get(UserProfile.class, senderId);
 			UserProfile recipient = session.get(UserProfile.class, recipientId);
 			recipient.getMessages().add(this);
 			

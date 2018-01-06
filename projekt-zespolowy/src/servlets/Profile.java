@@ -36,11 +36,11 @@ public class Profile extends HttpServlet {
 		 HttpSession session=request.getSession(false);
 		 PrintWriter out=response.getWriter();
 		 
-	     if(session!=null && session.getAttribute("userName") != null){ 
-	    	 String userName=(String)session.getAttribute("userName");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userName);
+	     if(session!=null && session.getAttribute("userId") != null){ 
+	    	 int userId= (int) session.getAttribute("userId");  
+		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 		     
-		     request.setAttribute("friends", userProfile.getColleagues());
+		     request.setAttribute("friends", userProfile.getFriends());
 		     request.setAttribute("userName", userProfile.getUserName());
 		     request.setAttribute("userEmail", userProfile.getEmail());
 		     request.getRequestDispatcher("/profile.jsp").forward(request, response);

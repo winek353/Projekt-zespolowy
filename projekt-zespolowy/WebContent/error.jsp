@@ -6,6 +6,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-Unsuccessful login
+	error: ${error}
 </body>
 </html>

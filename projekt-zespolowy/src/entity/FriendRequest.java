@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ import org.hibernate.cfg.Configuration;
 
 @Entity
 @Table(name = "colleague_request")
-public class ColleagueRequest {
+public class FriendRequest {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="colleague_request_id")
@@ -24,26 +25,26 @@ public class ColleagueRequest {
 	@Column(name="requester_id")
 	private int requesterId;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private UserProfile recipient;
 	
 	
 
-	public ColleagueRequest() {	
+	public FriendRequest() {	
 	}
 	
 
-	public ColleagueRequest(int requester, UserProfile recipient) {
+	public FriendRequest(int requester, UserProfile recipient) {
 		super();
 		this.requesterId = requester;
 		this.recipient = recipient;
 	}
 	
-	public static void sendCollegueRequest (int requesterId,int recipientId) {
+	public static void sendFriendRequest (int requesterId,int recipientId) {
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(ColleagueRequest.class)
+				.addAnnotatedClass(FriendRequest.class)
 				.addAnnotatedClass(UserProfile.class)
 				.buildSessionFactory();
 
@@ -54,12 +55,11 @@ public class ColleagueRequest {
 			UserProfile requester = session.get(UserProfile.class, requesterId);
 			UserProfile recipient = session.get(UserProfile.class, recipientId);
 			
-			ColleagueRequest colleagueRequest = new ColleagueRequest(requester.getId(), recipient);
+			FriendRequest friendRequest = new FriendRequest(requester.getId(), recipient);
 
-			recipient.getColleagueRequests().add(colleagueRequest);	
-			System.out.print("halo");
-
-			session.save(colleagueRequest);
+			recipient.getFriendRequests().add(friendRequest);	
+			
+			session.save(friendRequest);
 
 			session.getTransaction().commit();
 		} catch (Exception e) {
@@ -69,6 +69,52 @@ public class ColleagueRequest {
 			factory.close();
 		}		
 	}
+	
+	public static FriendRequest getFriendRequestFromDatabase (int id) {
+		SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(FriendRequest.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		FriendRequest friendRequest = null;
+		try {			
+		session.beginTransaction();
+
+		friendRequest = session.get(FriendRequest.class, id);
+		
+		session.getTransaction().commit();
+		}finally {
+			factory.close();
+			
+		}
+		return friendRequest;
+	}
+	
+	public void deleteFriendRequestFromDatabase () {
+		SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(FriendRequest.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		FriendRequest friendRequest = null;
+		try {			
+		session.beginTransaction();
+
+		friendRequest = session.get(FriendRequest.class, id);
+		
+		session.delete(friendRequest);
+		
+		session.getTransaction().commit();
+		}finally {
+			factory.close();	
+		}
+	}
+	
+
+	public UserProfile getRecipient() {
+		return recipient;
+	}
+
 
 	public String getRequesterName() {
 		return UserProfile.getUserProfileFromDatabase(requesterId).getUserName();
@@ -82,7 +128,7 @@ public class ColleagueRequest {
 	public void setRequesterId(int requesterId) {
 		this.requesterId = requesterId;
 	}
-	
+
 	public int getId() {
 		return id;
 	}

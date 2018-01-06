@@ -8,6 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<font color="red">${systemMessage}</font>
 	<form method="post" , action="LoginCheck">
 		<table>
 			<tr>
@@ -24,6 +25,6 @@
 			</tr>
 		</table>
 	</form>
-	<a href = "http://localhost:8080/projekt-zespolowy/register.jsp"> Zarejestruj_sie</a>
+	<a href = "http://localhost:8080/projekt-zespolowy/register.jsp"> Register</a>
 </body>
 </html>

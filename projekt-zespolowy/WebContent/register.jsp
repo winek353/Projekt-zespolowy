@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<font color="red">${systemMessage}</font>
 	<form method="post" , action="Register">
 		<table>
 			<tr>

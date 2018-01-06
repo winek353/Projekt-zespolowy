@@ -43,28 +43,25 @@ public class UserProfile {
 	@Column(name="password")
 	private String password; //salt:hash
 	
-	//collegue request
+	//friend request
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="recipient")
-    private Set<ColleagueRequest> colleagueRequests;
+    private Set<FriendRequest> friendRequests;
 	
 	
-	//znajomi
+	//friends
 	@ManyToMany(fetch = FetchType.EAGER, cascade= {CascadeType.ALL})
 	@JoinTable(name="user_colleague",
 		joinColumns={@JoinColumn(name="user_id")},
 		inverseJoinColumns={@JoinColumn(name="colleague_id")})
-	private Set<UserProfile> colleagues = new HashSet<UserProfile>();
+	private Set<UserProfile> friends = new HashSet<UserProfile>();
 	
-	//wiadomosci
+	//messages
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(name = "user_profile_message", 
         joinColumns = { @JoinColumn(name = "user_profile_id") }, 
         inverseJoinColumns = { @JoinColumn(name = "message_id") }
     )
     private Set<Message> messages = new HashSet<Message>();
-
-//	@ManyToMany(mappedBy="colleagues")
-//	private Set<UserProfile> teammates = new HashSet<UserProfile>();
 	
 	public UserProfile()  {		
 		
@@ -82,16 +79,16 @@ public class UserProfile {
 		}
 	}
 
-	public Set<ColleagueRequest> getColleagueRequests() {
-		return colleagueRequests;
+	public Set<FriendRequest> getFriendRequests() {
+		return friendRequests;
 	}
 
-	public void setColleagueRequests(Set<ColleagueRequest> colleagueRequests) {
-		this.colleagueRequests = colleagueRequests;
+	public void setFriendRequests(Set<FriendRequest> friendRequests) {
+		this.friendRequests = friendRequests;
 	}
 
-	public Set<UserProfile> getColleagues() {
-		return colleagues;
+	public Set<UserProfile> getFriends() {
+		return friends;
 	}
 
 	public Set<Message> getMessages() {
@@ -102,8 +99,8 @@ public class UserProfile {
 		this.messages = messages;
 	}
 
-	public void setColleagues(Set<UserProfile> colleagues) {
-		this.colleagues = colleagues;
+	public void setfriendss(Set<UserProfile> friends) {
+		this.friends = friends;
 	}
 
 	public int getId() {
@@ -128,6 +125,15 @@ public class UserProfile {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public boolean isFriendRequestSent(int requesterId) {
+
+		for(FriendRequest friendRequest : this.friendRequests) {
+			if(friendRequest.getRequesterId() == requesterId)
+				return true;
+		}
+		return false;
 	}
 
 	public String getPassword() {
@@ -202,8 +208,28 @@ public class UserProfile {
 		}
 		return result;
 	}
+	public boolean isFriend (int friendId) {
+		SessionFactory factory = new Configuration()
+				.configure("hibernate.cfg.xml")
+				.addAnnotatedClass(UserProfile.class)
+				.buildSessionFactory();
+		Session session = factory.getCurrentSession();
+		boolean result = false;
+		try {			
+		session.beginTransaction();
+		
+		UserProfile userProfile = session.get(UserProfile.class, this.getId());
+		UserProfile friendProfile = session.get(UserProfile.class, friendId);
+		result = userProfile.friends.contains(friendProfile);
+		
+		session.getTransaction().commit();
+		}finally {
+			factory.close();
+		}
+		return result;
+	}
 	
-	public void addFriend (UserProfile friendProfile) {//??????????????????
+	public void addFriend (UserProfile friendProfile) {
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
 				.addAnnotatedClass(UserProfile.class)
@@ -216,8 +242,7 @@ public class UserProfile {
 			UserProfile me = session.get(UserProfile.class, this.getId());
 			UserProfile friend = session.get(UserProfile.class, friendProfile.getId());
 
-			 me.getColleagues().add(friend);
-			 //friend.getColleagues().add(me);
+			 me.getFriends().add(friend);
 
 			session.getTransaction().commit();
 		} catch (Exception e) {

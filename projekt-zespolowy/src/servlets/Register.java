@@ -32,15 +32,6 @@ public class Register extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -50,25 +41,32 @@ public class Register extends HttpServlet {
 		String email = request.getParameter("email");		
 		String password = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
+
 		
 		if(password.length()<6) {
-			response.getWriter().append("<html><b>haslo musi miec co najmniej 6 znakow</b>").append(" </html>");
+			request.setAttribute("systemMessage", "Password has to be at least 6 characters long");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}	
 		if(!password.equals(confirmedPassword)) {
-			response.getWriter().append("<html><b>podane hasla sa rozne od siebie</b>").append(" </html>");
+			request.setAttribute("systemMessage", "Passwords are not the same");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}			
 		if(UserProfile.isUserNameInDatabase(uname)) {
-			response.getWriter().append("<html><b>nazwa u¿ytkownika jest zajeta</b>").append(" </html>");
+			request.setAttribute("systemMessage", "Username is already registered");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}			
 		if(UserProfile.isEmailInDatabase(email)) {
-			response.getWriter().append("<html><b>podany email jest zajety</b>").append(" </html>");
+			request.setAttribute("systemMessage", "Email is already registered");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
 			return;
 		}
 		UserProfile userProfile = new UserProfile(uname, email, password);
 		userProfile.saveToDatabase();
-		response.getWriter().append("<html><b>konto zostalo utworzone</b>").append(" </html>");
+		
+		request.setAttribute("systemMessage", "Account has been created");
+		request.getRequestDispatcher("/login.jsp").forward(request, response);
 	}
 }
