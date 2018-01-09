@@ -17,7 +17,7 @@ import entity.UserProfile;
  * Servlet implementation class Profile
  */
 @WebServlet("/Profile")
-public class Profile extends HttpServlet {
+public class Profile extends SessionCheckingServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -27,34 +27,22 @@ public class Profile extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		 HttpSession session=request.getSession(false);
-		 PrintWriter out=response.getWriter();
-		 
-	     if(session!=null && session.getAttribute("userId") != null){ 
-	    	 int userId= (int) session.getAttribute("userId");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
-		     
-		     request.setAttribute("friends", userProfile.getFriends());
-		     request.setAttribute("userName", userProfile.getUserName());
-		     request.setAttribute("userEmail", userProfile.getEmail());
-		     request.getRequestDispatcher("/profile.jsp").forward(request, response);
-	     }  
-	     else{  
-	         out.print("Please login first");  
-	         //request.getRequestDispatcher("login.html").include(request, response);  
-	         //wyswietlanie bledu dopiero na stronie logowania
-	     }
+		HttpSession session=request.getSession(false);
+		int userId= (int) session.getAttribute("loggedInUserId");  
+	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	     
+	     request.setAttribute("friends", userProfile.getFriends());
+	     request.setAttribute("userName", userProfile.getUserName());
+	     request.setAttribute("userEmail", userProfile.getEmail());
+	     request.getRequestDispatcher("/profile.jsp").forward(request, response);
 	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	@Override
+	protected void coreDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//doGet(request, response);
 		
 	}
 
