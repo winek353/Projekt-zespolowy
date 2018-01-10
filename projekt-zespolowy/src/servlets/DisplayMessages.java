@@ -18,7 +18,7 @@ import entity.UserProfile;
  * Servlet implementation class DisplayMessages
  */
 @WebServlet("/DisplayMessages")
-public class DisplayMessages extends HttpServlet {
+public class DisplayMessages extends SessionCheckingServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -32,28 +32,21 @@ public class DisplayMessages extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 HttpSession session=request.getSession(false);
-		 PrintWriter out=response.getWriter();
-		 
-	     if(session!=null && session.getAttribute("userId") != null){ 
-	    	 int userId= (int) session.getAttribute("userId");  
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	@Override
+	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession(false); 
+		int userId= (int) session.getAttribute("loggedInUserId");  
+	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 
-		     request.setAttribute("messages", userProfile.getMessages());
-		     request.getRequestDispatcher("/messages.jsp").forward(request, response);
-	     }  
-	     else{  
-	         out.print("Please login first");  
-	     }
+	     request.setAttribute("messages", userProfile.getMessages());
+	     request.getRequestDispatcher("/messages.jsp").forward(request, response);
+		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void coreDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		
 	}
 
 }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  * Servlet implementation class Logout
  */
 @WebServlet("/Logout")
-public class Logout extends HttpServlet {
+public class Logout extends SessionCheckingServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -24,18 +24,10 @@ public class Logout extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	/*
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		 HttpSession session=request.getSession(false);
@@ -51,6 +43,20 @@ public class Logout extends HttpServlet {
 		     else{  
 		         out.print("user hasn't been logged");  
 		     }
+	}*/
+
+	@Override
+	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void coreDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession session=request.getSession(false);
+		session.invalidate(); 
+	    response.sendRedirect("login.jsp");
 	}
 
 }

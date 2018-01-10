@@ -17,8 +17,11 @@ import logic.PasswordHasher;
 /**
  * Servlet implementation class AddFriend
  */
+
+
+
 @WebServlet("/AddFriend")
-public class AddFriend extends HttpServlet {
+public class AddFriend extends SessionCheckingServlet{
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -30,43 +33,37 @@ public class AddFriend extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 HttpSession session=request.getSession(false);
-		 PrintWriter out=response.getWriter();
-		 
-	     if(session!=null && session.getAttribute("userId") != null){
-	    	 int friendRequestId = Integer.parseInt(request.getParameter("request_id"));
-
-	    	 FriendRequest friendRequest = FriendRequest
-	    			 .getFriendRequestFromDatabase(friendRequestId);
-	    	 
-	    	 int friendId = friendRequest.getRequesterId();
-	    	
-	    	 UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
-	    	 
-	    	 int userId= (int) session.getAttribute("userId");   
-		     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
-		     
-		     userProfile.addFriend(friendProfile);
-		     friendProfile.addFriend(userProfile);
-		     
-		     friendRequest.deleteFriendRequestFromDatabase ();
-		     
-		     out.print("you are friend with " + friendProfile.getUserName()); 	
-	     }  
-	     else{  
-	         out.print("Please login first");  
-	     }
+	@Override
+	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
 	}
 
+	@Override
+	protected void coreDoPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession(false);
+		 PrintWriter out=response.getWriter();
+		 
+		int friendRequestId = Integer.parseInt(request.getParameter("request_id"));
+
+   	 	FriendRequest friendRequest = FriendRequest
+   			 .getFriendRequestFromDatabase(friendRequestId);
+   	 
+   	 	int friendId = friendRequest.getRequesterId();
+   	
+   	 	UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
+   	 
+   	 	int userId= (int) session.getAttribute("loggedInUserId");   
+	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	     
+	     userProfile.addFriend(friendProfile);
+	     friendProfile.addFriend(userProfile);
+	     
+	     friendRequest.deleteFriendRequestFromDatabase ();
+	     
+	     out.print("you are friend with " + friendProfile.getUserName());
+		
+	}
 }

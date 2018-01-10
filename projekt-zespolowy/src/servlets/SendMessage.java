@@ -17,7 +17,7 @@ import entity.UserProfile;
  * Servlet implementation class SendMessage
  */
 @WebServlet("/SendMessage")
-public class SendMessage extends HttpServlet {
+public class SendMessage extends SessionCheckingServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -27,45 +27,34 @@ public class SendMessage extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+	@Override
+	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void coreDoPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		
 		HttpSession session=request.getSession(false);
-		 PrintWriter out=response.getWriter();
+		PrintWriter out=response.getWriter();
+		
+		String text = request.getParameter("message");
+		 String recipient = request.getParameter("recipient");
+		 System.out.println("Do = " + recipient+ " " + "text = " + text);
 		 
-	     if(session!=null && session.getAttribute("userId") != null){ 
-	    	 String text = request.getParameter("message");
-	 		 String recipient = request.getParameter("recipient");
-	 		 System.out.println("Do = " + recipient+ " " + "text = " + text);
-	 		 
-	 		int userId= (int) session.getAttribute("userId");  
-	 		UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
-	    	UserProfile recipent = UserProfile.getUserProfileFromDatabase(recipient);
-	    	 
-	 		 
-	 		 Message message = new Message(text, sender.getId());
-	 		 message.send(sender.getId(), recipent.getId());
-	 		 
-	 		out.print("Message sent");  
-		     
-	     }  
-	     else{  
-	         out.print("Please login first");  
-	         //request.getRequestDispatcher("login.html").include(request, response);  
-	         //wyswietlanie bledu dopiero na stronie logowania
-	     }
-	
+		int userId= (int) session.getAttribute("loggedInUserId");  
+		UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
+		UserProfile recipent = UserProfile.getUserProfileFromDatabase(recipient);
+   	 
+		 
+		 Message message = new Message(text, sender.getId());
+		 message.send(sender.getId(), recipent.getId());
+		 
+		out.print("Message sent");  
 		
 	}
 

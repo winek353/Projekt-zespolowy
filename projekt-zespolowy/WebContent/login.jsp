@@ -9,7 +9,7 @@
 </head>
 <body>
 	<font color="red">${systemMessage}</font>
-	<form method="post" , action="LoginCheck">
+	<form method="post" , action="Login">
 		<table>
 			<tr>
 				<td>User Name</td>

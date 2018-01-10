@@ -18,7 +18,7 @@
 		</table>
 	</p>
 	<p>
-		znajomi:
+		friends:
 		<table>
   			<c:forEach items="${friends}" var="friend">
   			 <tr>
