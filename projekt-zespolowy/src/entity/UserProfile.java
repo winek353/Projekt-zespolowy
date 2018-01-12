@@ -78,6 +78,14 @@ public class UserProfile {
 			e.printStackTrace();
 		}
 	}
+	
+	public  FriendRequest getFriendRequest (int requesterId) {
+		for(FriendRequest friendRequest : friendRequests) {
+			if(friendRequest.getRequesterId() == requesterId)
+				return friendRequest;
+		}
+		return null; //exception???
+	}
 
 	public Set<FriendRequest> getFriendRequests() {
 		return friendRequests;
@@ -191,6 +199,10 @@ public class UserProfile {
 		return result;
 	}
 	public static boolean isUserNameInDatabase (String userName) {
+		if(userName == null)
+			return false;
+		System.out.println("tutaj " + userName);
+		
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")
 				.addAnnotatedClass(UserProfile.class)
@@ -199,6 +211,7 @@ public class UserProfile {
 		boolean result = false;
 		try {			
 		session.beginTransaction();
+		
 
 		result = !session.createQuery("from UserProfile up where up.userName='" + userName + "'").list().isEmpty();
 		

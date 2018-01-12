@@ -43,16 +43,16 @@ public class SendMessage extends SessionCheckingServlet {
 		PrintWriter out=response.getWriter();
 		
 		String text = request.getParameter("message");
-		 String recipient = request.getParameter("recipient");
-		 System.out.println("Do = " + recipient+ " " + "text = " + text);
+		String recipient = request.getParameter("recipient");
+		System.out.println("Do = " + recipient+ " " + "text = " + text);
 		 
 		int userId= (int) session.getAttribute("loggedInUserId");  
 		UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
 		UserProfile recipent = UserProfile.getUserProfileFromDatabase(recipient);
    	 
 		 
-		 Message message = new Message(text, sender.getId());
-		 message.send(sender.getId(), recipent.getId());
+		Message message = new Message(text, sender.getId());
+		message.send(sender.getId(), recipent.getId());
 		 
 		out.print("Message sent");  
 		

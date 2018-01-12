@@ -56,14 +56,14 @@ public class AddFriend extends SessionCheckingServlet{
    	 	UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
    	 
    	 	int userId= (int) session.getAttribute("loggedInUserId");   
-	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	    UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 	     
-	     userProfile.addFriend(friendProfile);
-	     friendProfile.addFriend(userProfile);
+	    userProfile.addFriend(friendProfile);
+	    friendProfile.addFriend(userProfile);
 	     
-	     friendRequest.deleteFriendRequestFromDatabase ();
+	    friendRequest.deleteFriendRequestFromDatabase ();
 	     
-	     out.print("you are friend with " + friendProfile.getUserName());
+	    out.print("you are friend with " + friendProfile.getUserName());
 		
 	}
 }

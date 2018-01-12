@@ -36,10 +36,10 @@ public class DisplayMessages extends SessionCheckingServlet {
 	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session=request.getSession(false); 
 		int userId= (int) session.getAttribute("loggedInUserId");  
-	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	    UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
 
-	     request.setAttribute("messages", userProfile.getMessages());
-	     request.getRequestDispatcher("/messages.jsp").forward(request, response);
+	    request.setAttribute("messages", userProfile.getMessages());
+	    request.getRequestDispatcher("/messages.jsp").forward(request, response);
 		
 	}
 

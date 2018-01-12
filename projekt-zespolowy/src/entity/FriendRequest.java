@@ -9,10 +9,19 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import logic.AlreadyFriends;
+import logic.AlreadySentByFriend;
+import logic.AlreadySentByUser;
+import logic.CorrectFriend;
+import logic.FriendWithSelf;
+import logic.NotExistingFriend;
+import logic.SendFriendRequestStrategy;
 
 @Entity
 @Table(name = "colleague_request")
@@ -39,6 +48,24 @@ public class FriendRequest {
 		super();
 		this.requesterId = requester;
 		this.recipient = recipient;
+	}
+	
+	public static SendFriendRequestStrategy selectSendFriendRequestStrategy
+			(UserProfile userProfile,UserProfile friendProfile, HttpServletResponse response) {
+		
+		if(friendProfile == null)
+			return new NotExistingFriend(userProfile, friendProfile, response);
+		if(userProfile.getId() == friendProfile.getId())
+			return new FriendWithSelf(userProfile, friendProfile, response);
+		if(userProfile.isFriendRequestSent(friendProfile.getId())) 
+			return new AlreadySentByFriend(userProfile, friendProfile, response);
+		if(userProfile.isFriend(friendProfile.getId()))
+			return new AlreadyFriends(userProfile, friendProfile, response);
+		if(friendProfile.isFriendRequestSent(userProfile.getId()))
+			return new AlreadySentByUser(userProfile, friendProfile, response);
+		
+		else
+			return new CorrectFriend(userProfile, friendProfile, response);
 	}
 	
 	public static void sendFriendRequest (int requesterId,int recipientId) {
