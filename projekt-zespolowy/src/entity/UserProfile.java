@@ -201,7 +201,6 @@ public class UserProfile {
 	public static boolean isUserNameInDatabase (String userName) {
 		if(userName == null)
 			return false;
-		System.out.println("tutaj " + userName);
 		
 		SessionFactory factory = new Configuration()
 				.configure("hibernate.cfg.xml")

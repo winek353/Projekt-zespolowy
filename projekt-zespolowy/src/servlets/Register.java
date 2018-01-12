@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,9 +34,50 @@ public class Register extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+    public static boolean containsWhitespace(String str) {
+        for (int i = 0; i < str.length(); i++) 
+          if (Character.isWhitespace(str.charAt(i))) 
+            return true;
+        return false;
+      }
+    
+    public static boolean isRegistrationCorrect(String uname, String email, 
+    		String password, Object confirmedPassword, ServletRequest request,
+    		ServletResponse response) throws ServletException, IOException {
+    	
+    	if(containsWhitespace(uname) || uname.isEmpty()) {
+			request.setAttribute("systemMessage", "Username cannot contain whitespace or be empty");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}
+		if(containsWhitespace(email) || email.isEmpty()) {
+			request.setAttribute("systemMessage", "Email cannot contain whitespace or be empty");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}
+		if(password.length()<6) {
+			request.setAttribute("systemMessage", "Password has to be at least 6 characters long");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}	
+		if(!password.equals(confirmedPassword)) {
+			request.setAttribute("systemMessage", "Passwords are not the same");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}			
+		if(UserProfile.isUserNameInDatabase(uname)) {
+			request.setAttribute("systemMessage", "Username is already registered");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}			
+		if(UserProfile.isEmailInDatabase(email)) {
+			request.setAttribute("systemMessage", "Email is already registered");
+			request.getRequestDispatcher("/register.jsp").forward(request, response);
+			return false;
+		}
+		return true;
+    }
+    
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String uname = request.getParameter("uname");
@@ -42,31 +85,13 @@ public class Register extends HttpServlet {
 		String password = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
 
-		
-		if(password.length()<6) {
-			request.setAttribute("systemMessage", "Password has to be at least 6 characters long");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
-		}	
-		if(!password.equals(confirmedPassword)) {
-			request.setAttribute("systemMessage", "Passwords are not the same");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
-		}			
-		if(UserProfile.isUserNameInDatabase(uname)) {
-			request.setAttribute("systemMessage", "Username is already registered");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
-		}			
-		if(UserProfile.isEmailInDatabase(email)) {
-			request.setAttribute("systemMessage", "Email is already registered");
-			request.getRequestDispatcher("/register.jsp").forward(request, response);
-			return;
+		if(isRegistrationCorrect(uname, email, password, confirmedPassword, request, response) ) {
+			UserProfile userProfile = new UserProfile(uname, email, password);
+			userProfile.saveToDatabase();
+			
+			request.setAttribute("systemMessage", "Account has been created");
+			request.getRequestDispatcher("/login.jsp").forward(request, response);		
 		}
-		UserProfile userProfile = new UserProfile(uname, email, password);
-		userProfile.saveToDatabase();
 		
-		request.setAttribute("systemMessage", "Account has been created");
-		request.getRequestDispatcher("/login.jsp").forward(request, response);
 	}
 }
