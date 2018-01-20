@@ -24,6 +24,7 @@
 		<!-- Set the current session context -->
 		<property name="current_session_context_class">thread</property>
 		
+		<mapping class="entity.Event" />
 		<mapping class="entity.Message" />
 		<mapping class="entity.FriendRequest" />
 		<mapping class="entity.UserProfile" />

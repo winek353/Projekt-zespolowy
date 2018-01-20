@@ -8,6 +8,8 @@ CREATE TABLE `user_profile` (
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(200) NOT NULL,
   
+  -- `sex` CHAR(1),
+  
   -- NA POZNIEJ
   -- adres jako odniesienie do innej tabeli
 
@@ -54,8 +56,31 @@ CREATE TABLE `user_profile_message` (
    FOREIGN KEY (`message_id`) REFERENCES `message` (`message_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `event` (
+  `event_id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+  `event_name` varchar(50) DEFAULT NULL,
+  `host` varchar(50) NOT NULL,
+  PRIMARY KEY (`event_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_profile_event` (
+  `user_profile_id` BIGINT(11) NOT NULL,
+  `event_id` BIGINT(11) NOT NULL,
+  PRIMARY KEY (`user_profile_id`,`event_id`),
+  KEY `event_id` (`event_id`),
+  
+  
+  CONSTRAINT `user_profile_event_fk_1` 
+   FOREIGN KEY (`user_profile_id`) REFERENCES `user_profile` (`user_profile_id`),
+   
+  CONSTRAINT `user_profile_event_fk_2` 
+   FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*USUWANIE BAZY DANYCH
 
+DROP TABLE user_profile_event;
+DROP TABLE event;
 DROP TABLE colleague_request;
 DROP TABLE user_profile_message;
 DROP TABLE message;

@@ -18,13 +18,15 @@
 <div id="topNav"></div>
 <div class="main">
 	<h3>friends: </h3>
+	<p>
 			<table>
 	  			<c:forEach items="${friends}" var="friend">
 	  			 <tr>
-	    			 <td>${friend}</td>
+	    			<p> <td>${friend}</td> </p>
 	  			 </tr>
 	  			</c:forEach>
 			</table>
+	</p>
 	<a href = "http://localhost:8080/projekt-zespolowy/send_friend_request.jsp">add friend</a>
 <p>friend requests:
 	<table  width='350'>

@@ -53,10 +53,10 @@ public class AddFriend extends SessionCheckingServlet{
    	 
    	 	int friendId = friendRequest.getRequesterId();
    	
-   	 	UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendId);
+   	 	UserProfile friendProfile = UserProfile.getHibernateFacade().getFromDatabase(friendId);
    	 
    	 	int userId= (int) session.getAttribute("loggedInUserId");   
-	    UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	    UserProfile userProfile = UserProfile.getHibernateFacade().getFromDatabase(userId);
 	     
 	    userProfile.addFriend(friendProfile);
 	    friendProfile.addFriend(userProfile);

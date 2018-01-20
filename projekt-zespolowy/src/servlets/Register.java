@@ -87,7 +87,8 @@ public class Register extends HttpServlet {
 
 		if(isRegistrationCorrect(uname, email, password, confirmedPassword, request, response) ) {
 			UserProfile userProfile = new UserProfile(uname, email, password);
-			userProfile.saveToDatabase();
+			UserProfile.getHibernateFacade().saveToDatabase(userProfile);
+			//userProfile.saveToDatabase();
 			
 			request.setAttribute("systemMessage", "Account has been created");
 			request.getRequestDispatcher("/login.jsp").forward(request, response);		

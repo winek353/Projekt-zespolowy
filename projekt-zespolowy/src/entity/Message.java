@@ -51,7 +51,7 @@ public class Message {
 	}
 	
 	public String getAuthorName() {
-		return UserProfile.getUserProfileFromDatabase(author).getUserName();
+		return UserProfile.getHibernateFacade().getFromDatabase(author).getUserName();
 	}
 
 	public int getAuthor() {

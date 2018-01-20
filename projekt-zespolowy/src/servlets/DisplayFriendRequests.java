@@ -33,7 +33,7 @@ public class DisplayFriendRequests extends SessionCheckingServlet {
 	protected void coreDoGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		HttpSession session=request.getSession(false);
 		int userId= (int) session.getAttribute("loggedInUserId");   
-	    UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	    UserProfile userProfile = UserProfile.getHibernateFacade().getFromDatabase(userId);
 
 	    request.setAttribute("friendRequests", userProfile.getFriendRequests());
 	    request.getRequestDispatcher("/friends.jsp").forward(request, response);	

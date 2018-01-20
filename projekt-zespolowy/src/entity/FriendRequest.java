@@ -144,7 +144,7 @@ public class FriendRequest {
 
 
 	public String getRequesterName() {
-		return UserProfile.getUserProfileFromDatabase(requesterId).getUserName();
+		return UserProfile.getHibernateFacade().getFromDatabase(requesterId).getUserName();
 	}
 
 	public int getRequesterId() {
@@ -174,7 +174,7 @@ public class FriendRequest {
 	
 	@Override
 	public String toString() {
-		return "requester = " + UserProfile.getUserProfileFromDatabase(requesterId);
+		return "requester = " + UserProfile.getHibernateFacade().getFromDatabase(requesterId);
 	}
 	
 }

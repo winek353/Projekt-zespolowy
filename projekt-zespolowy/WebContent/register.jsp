@@ -33,7 +33,7 @@
 	    <input id="register" type="text" placeholder="User name" name="uname" required>
 	
 	    <label><b>Email</b></label>
-	    <input id="register" type="email" placeholder="Email" name="email" required>
+	    <input id="register" type="text" placeholder="Email" name="email" required>
 	
 	    <label><b>Password</b></label>
 	    <input id="register" type="password" placeholder="Password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters" required>>
@@ -42,7 +42,7 @@
 	    <input id="register" type="password" placeholder="Password" name="confirmedPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 6 or more characters" required>>
 	    
 	    <input type="checkbox" checked="checked"> Remember me
-	    <p>By creating an account you agree to our <a href="https://www.youtube.com/watch?v=WjrqpJQBKCQ">Terms & Privacy</a>.</p>
+	    <p>By creating an account you agree to our <a href="">Terms & Privacy</a>.</p>
 	    
 	
 	    <div class="clearfix">

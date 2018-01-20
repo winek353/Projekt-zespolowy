@@ -45,10 +45,11 @@ public class SendMessage extends SessionCheckingServlet {
 		String text = request.getParameter("message");
 		String recipient = request.getParameter("recipient");
 		 
-		System.out.println(recipient);
+		System.out.println("by³em  w send message");
 		if(UserProfile.isUserNameInDatabase(recipient)) {
 			int userId= (int) session.getAttribute("loggedInUserId");  
-			UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
+			//UserProfile sender = UserProfile.getUserProfileFromDatabase(userId);
+			UserProfile sender = UserProfile.getHibernateFacade().getFromDatabase(userId);
 			UserProfile recipent = UserProfile.getUserProfileFromDatabase(recipient);
  
 			Message message = new Message(text, sender.getId());

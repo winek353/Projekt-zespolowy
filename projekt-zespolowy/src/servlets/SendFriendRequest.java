@@ -41,7 +41,7 @@ public class SendFriendRequest extends SessionCheckingServlet {
 		HttpSession session=request.getSession(false);
 		String friendName = request.getParameter("friendName");	
 		int userId= (int) session.getAttribute("loggedInUserId");
-    	UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+    	UserProfile userProfile = UserProfile.getHibernateFacade().getFromDatabase(userId);
     	UserProfile friendProfile = UserProfile.getUserProfileFromDatabase(friendName);
     	
     	SendFriendRequestStrategy sendFriendRequestStrategy =

@@ -32,7 +32,7 @@ public class Profile extends SessionCheckingServlet {
 		
 		HttpSession session=request.getSession(false);
 		int userId= (int) session.getAttribute("loggedInUserId");  
-	     UserProfile userProfile = UserProfile.getUserProfileFromDatabase(userId);
+	     UserProfile userProfile = UserProfile.getHibernateFacade().getFromDatabase(userId);
 	     
 	     request.setAttribute("friends", userProfile.getFriends());
 	     request.setAttribute("userName", userProfile.getUserName());

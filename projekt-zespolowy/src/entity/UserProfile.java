@@ -2,6 +2,7 @@ package entity;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,12 +18,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.CascadeType;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import logic.HibernateFacade;
 import logic.PasswordHasher;
 
 @Entity
@@ -43,6 +46,10 @@ public class UserProfile {
 	@Column(name="password")
 	private String password; //salt:hash
 	
+	//optional informations
+//	@Column(name="sex")
+//	private char sex;
+	
 	//friend request
 	@OneToMany(fetch = FetchType.EAGER, mappedBy="recipient")
     private Set<FriendRequest> friendRequests;
@@ -62,6 +69,17 @@ public class UserProfile {
         inverseJoinColumns = { @JoinColumn(name = "message_id") }
     )
     private Set<Message> messages = new HashSet<Message>();
+	
+	//events
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
+    @JoinTable(name = "user_profile_event", 
+        joinColumns = { @JoinColumn(name = "user_profile_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "event_id") }
+    )
+	
+
+	
+    private Set<Event> events = new HashSet<>();
 	
 	public UserProfile()  {		
 		
@@ -87,9 +105,34 @@ public class UserProfile {
 		return null; //exception???
 	}
 
+	public Set<Event> getEvents() {
+		return events;
+	}
+
+//	@Transient
+	private static HibernateFacade<UserProfile> hibernateFacade
+		= new HibernateFacade<>(UserProfile.class);
+	@Transient
+	public static HibernateFacade<UserProfile> getHibernateFacade() {
+		//return new HibernateFacade<>(UserProfile.class);
+		return hibernateFacade;
+	}
+
+	public void setEvents(Set<Event> events) {
+		this.events = events;
+	}
+
 	public Set<FriendRequest> getFriendRequests() {
 		return friendRequests;
 	}
+
+//	public char getSex() {
+//		return sex;
+//	}
+//
+//	public void setSex(char sex) {
+//		this.sex = sex;
+//	}
 
 	public void setFriendRequests(Set<FriendRequest> friendRequests) {
 		this.friendRequests = friendRequests;
@@ -134,7 +177,11 @@ public class UserProfile {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+//	
+//	public void updateInfo(UserProfile updatedUserProfile) {
+//		this.sex = updatedUserProfile.sex;
+//	}
+//	
 	public boolean isFriendRequestSent(int requesterId) {
 
 		for(FriendRequest friendRequest : this.friendRequests) {
@@ -157,28 +204,26 @@ public class UserProfile {
 		return "UserProfile [id=" + id + ", userName=" + userName + ", email=" + email + "]";
 	}
 	
-	public void saveToDatabase () {
-		SessionFactory factory = new Configuration()
-				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(UserProfile.class)
-				.buildSessionFactory();
-
-		Session session = factory.getCurrentSession();
-		try {			
-			session.beginTransaction();
-			
-			session.save(this);
-			
-			session.getTransaction().commit();
-			
-			System.out.println("Done!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		finally {
-			factory.close();
-		}
-	}
+//	public void saveToDatabase () {
+//		SessionFactory factory = new Configuration()
+//				.configure("hibernate.cfg.xml")
+//				.addAnnotatedClass(UserProfile.class)
+//				.buildSessionFactory();
+//
+//		Session session = factory.getCurrentSession();
+//		try {			
+//			session.beginTransaction();
+//			
+//			session.save(this);
+//			
+//			session.getTransaction().commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
+//		finally {
+//			factory.close();
+//		}
+//	}
 	
 	public static boolean isEmailInDatabase (String email) {
 		SessionFactory factory = new Configuration()
@@ -287,22 +332,45 @@ public class UserProfile {
 			return profile.get(0);
 		}
 	}
-	public static UserProfile getUserProfileFromDatabase (int id) {
-		SessionFactory factory = new Configuration()
-				.configure("hibernate.cfg.xml")
-				.addAnnotatedClass(UserProfile.class)
-				.buildSessionFactory();
-		Session session = factory.getCurrentSession();
-		UserProfile profile = null;
-		try {			
-		session.beginTransaction();
-
-		profile = session.get(UserProfile.class, id);
-		session.getTransaction().commit();
-		}finally {
-			factory.close();
-			
-		}
-		return profile;
-	}
+//	public static UserProfile getUserProfileFromDatabase (int id) {
+//		SessionFactory factory = new Configuration()
+//				.configure("hibernate.cfg.xml")
+//				.addAnnotatedClass(UserProfile.class)
+//				.buildSessionFactory();
+//		Session session = factory.getCurrentSession();
+//		UserProfile profile = null;
+//		try {			
+//		session.beginTransaction();
+//
+//		profile = session.get(UserProfile.class, id);
+//		session.getTransaction().commit();
+//		}finally {
+//			factory.close();
+//			
+//		}
+//		return profile;
+//	}
+	
+//	public void updateProfileInfoInDatabase (UserProfile updatedUserProfile) {
+//		SessionFactory factory = new Configuration()
+//				.configure("hibernate.cfg.xml")
+//				.addAnnotatedClass(UserProfile.class)
+//				.buildSessionFactory();
+//
+//		Session session = factory.getCurrentSession();	
+//		try {			
+//			session.beginTransaction();
+//
+//			UserProfile userProfile = session.get(UserProfile.class, this.getId());
+//			
+//			userProfile.updateInfo(updatedUserProfile);
+//
+//			session.getTransaction().commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} 
+//		finally {
+//			factory.close();
+//		}
+//	}
 }
